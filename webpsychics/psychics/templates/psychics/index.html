@@ -1,0 +1,88 @@
+{% extends 'psychics/templatepage.html' %}
+
+{% block history_iz %}
+    
+    {{ good_iz }}
+
+{% endblock %}
+
+{% block credibility_iz %}
+
+    {{ ratings.izolda }}
+
+{% endblock %}
+
+{% block history_ger %}
+    
+    {% for v in val %}
+    
+        {{ v }},
+    
+    {% endfor %}
+
+{% endblock %}
+
+{% block credibility_ger %}
+
+    100%
+
+{% endblock %}
+
+{% block history_sv %}
+    
+    1,3,2,6
+
+{% endblock %}
+
+{% block credibility_sv %}
+
+    100%
+
+{% endblock %}
+
+{% block history_ev %}
+    
+    1,3,2,6
+
+{% endblock %}
+
+{% block credibility_ev %}
+
+    100%
+
+{% endblock %}
+
+
+{% block history_num %}
+
+    {% for num in history_num %}
+        {{ num }} " "
+    {% endfor %}
+    
+{% endblock %}
+
+
+
+
+{% block dinamic %}
+    {% if sendstate == 0 %}
+        {% include 'psychics/sendingnumber.html' %}
+    {% elif sendstate == 1 %}
+        {% include 'psychics/setnumber.html' %}
+    {% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

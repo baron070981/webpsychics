@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang=ru>
+    <head>
+        <meta charset="utf-8">
+        <title>Psychics</title>
+        <link rel='stylesheet' href='{% static "psychics/css/templatepage.css" %}'>
+    <body>
+        <table id='psychics-list'>
+            <tr>
+                <th class='name'></th>
+                <th class='credibility'>Достоверность</th>
+                <th>История отгаданных чисел</th>
+            </tr>
+            <tr>
+                <td class='name'>Изольда</td>
+                <td class='credibility'>{% block credibility_iz %}{% endblock %}</td>
+                <td>{% block history_iz %}{% endblock %}</td>
+            </tr>
+            <tr>
+                <td class='name'>Гермоген</td>
+                <td class='credibility'>{% block credibility_ger %}{% endblock %}</td>
+                <td>{% block history_ger %}{% endblock %}</td>
+            </tr>
+            <tr>
+                <td class='name'>Святозар</td>
+                <td class='credibility'>{% block credibility_sv %}{% endblock %}</td>
+                <td>{% block history_sv %}{% endblock %}</td>
+            </tr>
+            <tr>
+                <td class='name'>Евлампий</td>
+                <td class='credibility'>{% block credibility_ev %}{% endblock %}</td>
+                <td>{% block history_ev %}{% endblock %}</td>
+            </tr>
+            <tr>
+                <td class='history_label'>История введенных чисел</td>
+                <td class='history_numbers' colspan=2>{% block history_num %}{% endblock %}</td>
+            </tr>
+        </table>
+        {% block dinamic %}
+        {% endblock %}
+    </body>
+</html>  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
