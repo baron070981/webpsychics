@@ -2,7 +2,7 @@
 
 {% block history_iz %}
     
-    {{ good_iz }}
+    {{ guessed.izolda|join:" " }}
 
 {% endblock %}
 
@@ -14,50 +14,44 @@
 
 {% block history_ger %}
     
-    {% for v in val %}
-    
-        {{ v }},
-    
-    {% endfor %}
+    {{ guessed.germogen|join:" " }}
 
 {% endblock %}
 
 {% block credibility_ger %}
 
-    100%
+    {{ ratings.germogen }}
 
 {% endblock %}
 
 {% block history_sv %}
     
-    1,3,2,6
+    {{ guessed.svyatozar|join:" " }}
 
 {% endblock %}
 
 {% block credibility_sv %}
 
-    100%
+    {{ ratings.svyatozar }}
 
 {% endblock %}
 
 {% block history_ev %}
     
-    1,3,2,6
+    {{ guessed.evlampy|join:" " }}
 
 {% endblock %}
 
 {% block credibility_ev %}
 
-    100%
+    {{ ratings.evlampy }}
 
 {% endblock %}
 
 
 {% block history_num %}
 
-    {% for num in history_num %}
-        {{ num }} " "
-    {% endfor %}
+    {{historynum|join:" "}}
     
 {% endblock %}
 
