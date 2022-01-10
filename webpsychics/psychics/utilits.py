@@ -1,5 +1,5 @@
 from random import randint
-
+import rich
 
 class Psychics:
     
@@ -25,7 +25,7 @@ class Psychics:
         self.allnums.append(num)
         return num
     
-    # @property
+    
     def tojson(self):
         return {
             'name':self.name,
@@ -34,32 +34,62 @@ class Psychics:
             'allnums':self.allnums,
         }
     
-    def fromdict(self, data):
-        for key in data:
-            if key in self.keys:
-                if key == 'name':
-                    if self.name != data['name']:
-                        return
-                elif key == 'guessed':
-                    self.guessed.append(data['guessed'])
-                elif key == 'rating':
-                    ...
-                elif key == 'allnums':
-                    self.allnums.append(data['allnums'])
     
     def set_rating(self):
         try:
-            return len(self.guessed)/len(self.allnums)
+            self.rating = int(len(self.guessed)/len(self.allnums)*100)
+            return self.rating
         except:
+            self.rating = 0.0
             return 0.0
     
+    
     def check_number(self, compared):
-        if self.allnums and compared == self.allnums[-1]:
-            self.guessed.append(self.allnums[-1])
+        states = [2,3,5,compared]
+        statenum = states[randint(0,len(states)-1)]
+        self.allnums.append(compared)
+        if compared % statenum == 0:
+            self.guessed.append(compared)
             return True
         return False
     
     
+
+
+
+
+class PsychicsProc:
+    
+    params = ['name', 'guessed', 'rating', 'allnums', ]
+    
+    def __init__(self):
+        self.persons = dict()
+    
+    def add(self, *persons):
+        for pers in persons:
+            if isinstance(pers, Psychics):
+                self.persons[pers.name] = pers
+    
+    def get(self, param):
+        params = {}
+        if self.persons:
+            for key in self.persons:
+                if param == 'guessed':
+                    params[key] = self.persons[key].guessed
+                elif param == 'rating':
+                    params[key] = self.persons[key].rating
+        return params
+    
+    
+    def tojson(self):
+        persons = {}
+        if self.persons:
+            for key in self.persons:
+                persons[key] = self.persons[key].tojson()
+        return persons
+    
+    
+
 
 psychics_person = [
                 Psychics('izolda'),
@@ -69,21 +99,8 @@ psychics_person = [
             ]
 
 
-
-class PsychicsProc:
-    
-    def __init__(self):
-        pass
-    
-    def add(self, person_list):
-        ...
-
-
-
-
-
-
-
+psychics_proc = PsychicsProc()
+psychics_proc.add(*psychics_person)
 
 
 
