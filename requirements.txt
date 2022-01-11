@@ -23,7 +23,3 @@ requests==2.19.1
 six==1.11.0
 stripe==2.4.0
 urllib3==1.23
-virtualenv==16.0.0
-virtualenv-clone==0.3.0
-whitenoise==3.3.1
-psycopg2==2.8.6
