@@ -6,9 +6,6 @@ chardet==3.0.4
 dj-database-url==0.4.2
 Django==2.0
 django-crispy-forms==1.7.2
--e git://github.com/AndrewIngram/django-extra- 
-views.git@aa58167af84d89feea286f9567a72cc5941360e4#egg=django_extra_views
-django-heroku==0.1.0
 django-multiselectfield==0.1.8
 django-session-timeout==0.0.3
 gunicorn==19.7.1
