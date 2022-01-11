@@ -23,3 +23,4 @@ requests==2.19.1
 six==1.11.0
 stripe==2.4.0
 urllib3==1.23
+rich
