@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from . import utilits
 from .utilits import Psychics, psychics_person, psychics_proc
 
-import rich
 
 # Create your views here.
 
