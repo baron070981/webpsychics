@@ -2,49 +2,49 @@
 
 {% block history_iz %}
     
-    {{ guessed.izolda|join:" " }}
+    {{ psychics.izolda.guessed|join:" " }}
 
 {% endblock %}
 
 {% block credibility_iz %}
 
-    {{ ratings.izolda }}
+    {{ psychics.izolda.ratings }}
 
 {% endblock %}
 
 {% block history_ger %}
     
-    {{ guessed.germogen|join:" " }}
+    {{ psychics.germogen.guessed|join:" " }}
 
 {% endblock %}
 
 {% block credibility_ger %}
 
-    {{ ratings.germogen }}
+    {{ psychics.germogen.ratings }}
 
 {% endblock %}
 
 {% block history_sv %}
     
-    {{ guessed.svyatozar|join:" " }}
+    {{ psychics.svyatozar.guessed|join:" " }}
 
 {% endblock %}
 
 {% block credibility_sv %}
 
-    {{ ratings.svyatozar }}
+    {{ psychics.svyatozar.ratings }}
 
 {% endblock %}
 
 {% block history_ev %}
     
-    {{ guessed.evlampy|join:" " }}
+    {{ psychics.evlampy.guessed|join:" " }}
 
 {% endblock %}
 
 {% block credibility_ev %}
 
-    {{ ratings.evlampy }}
+    {{ psychics.evlampy.ratings }}
 
 {% endblock %}
 
