@@ -5,6 +5,7 @@ from .utilits import Psychics, psychics_person, psychics_proc
 
 from random import randint
 
+from .forms import SendNumForm
 
 
 
@@ -32,6 +33,7 @@ psychics_person = {
             }
 
 history = []
+state = 1
 
 def check_number(compared, person):
     states = [2,3,5,compared]
@@ -45,31 +47,31 @@ def rating_calc(len_allnums, person):
     rating = 0
     try:
         rating = int(len(person['guessed'])/len_allnums*100)
-        print('In function rating_calc:', rating)
     except Exception as err:
-        print('Error:', err)
         pass
     person['ratings'] = rating
     return person
 
 
+
 def index(request):
     global psychics_person
     global history
-    state = 1
-    
+    global state
+    request.session['state'] = state
     request.session['psychics'] = psychics_person
     request.session['historynum'] = history
+    form = SendNumForm()
     
     if request.method == 'POST':
-        
-        if request.POST.get('button_setnum'):
-            data = request.session.get('psychics')
-            request.session['psychics'] = psychics_person
+        if state == 1 and request.POST.get('button_setnum'):
             state = 0
             
-        elif request.POST.get('button_sendnum'):
-            num = int(request.POST.get('button_sendnum'))
+        elif state == 0:
+            form = SendNumForm(request.POST)
+            num = 0
+            if form.is_valid():
+                num = int(form.cleaned_data.get('number'))
             history = request.session.get('historynum')
             psychics_person = request.session.get('psychics')
             if num >= 10 and num < 100:
@@ -91,7 +93,8 @@ def index(request):
         'sendstate':state,
         # 'ratings': psychics_proc.get('rating'),
         'historynum':request.session.get('historynum'),
-        'psychics':request.session.get('psychics')
+        'psychics':request.session.get('psychics'),
+        'form':form,
     }
         
     
