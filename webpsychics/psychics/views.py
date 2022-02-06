@@ -1,104 +1,115 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from . import utilits
-from .utilits import Psychics, psychics_person, psychics_proc
+from django.shortcuts import render, redirect
+from django.views.generic import ListView
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
+from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpRequest
+from  django.contrib.sessions.models import Session
 
 from random import randint
 
-from .forms import SendNumForm
+from .models import *
+from .forms import *
 
 
 
 
-psychics_person = {
-                'izolda':{'name':'izolda', 
-                             'guessed':[], 
-                             'ratings':0,
-                             'allnums':0,},
-                 
-                'germogen':{'name':'germogen', 
-                             'guessed':[], 
-                             'ratings':0,
-                             'allnums':0,},
-                 
-                'svyatozar':{'name':'svyatozar', 
-                             'guessed':[], 
-                             'ratings':0,
-                             'allnums':0,},
-                 
-                'evlampy':{'name':'evlampy', 
-                             'guessed':[], 
-                             'ratings':0,
-                             'allnums':0,},
-            }
-
-history = []
-state = 1
-
-def check_number(compared, person):
-    states = [2,3,5,compared]
-    statenum = states[randint(0,len(states)-1)]
-    if compared % statenum == 0:
-        person['guessed'].append(str(compared))
-    return person
 
 
-def rating_calc(len_allnums, person):
-    rating = 0
-    try:
-        rating = int(len(person['guessed'])/len_allnums*100)
-    except Exception as err:
-        pass
-    person['ratings'] = rating
-    return person
-
-
-
-def index(request):
-    global psychics_person
-    global history
-    global state
-    request.session['state'] = state
-    request.session['psychics'] = psychics_person
-    request.session['historynum'] = history
-    form = SendNumForm()
+class PsychicsListView(ListView):
+    # request = HttpRequest()
+    # key = request.session.session_key
+    # model = PsychicsModel
+    template_name = 'psychics/guess_number_page.html'
     
-    if request.method == 'POST':
-        if state == 1 and request.POST.get('button_setnum'):
-            state = 0
-            
-        elif state == 0:
-            form = SendNumForm(request.POST)
-            num = 0
-            if form.is_valid():
-                num = int(form.cleaned_data.get('number'))
-            history = request.session.get('historynum')
-            psychics_person = request.session.get('psychics')
-            if num >= 10 and num < 100:
-                history.append(str(num))
-                request.session['historynum'] = history
-                for key, person in psychics_person.items():
-                    upd_person = check_number(num, person)
-                    upd_person = rating_calc(len(history), upd_person)
-                    psychics_person[key] = upd_person
-                    
-                request.session['psychics'] = psychics_person
-                state = 1
+    
+    def create_objects(self):
+        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
+        if 'psychics' not in self.request.session:
+            psychics = {}
+            for name in qs:
+                psychics[str(name)] = {}
+                psychics[str(name)]['rating'] = 0
+                psychics[str(name)]['numbers'] = []
+                psychics[str(name)]['right_answers'] = []
+                psychics[str(name)]['wrong_answers'] = []
+            self.request.session['psychics'] = psychics
+    
+    
+    def upd_psychic(self):
+        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
+        if 'psychics' not in self.request.session:
+            return
+        names_in_session = self.request.session['psychics'].keys()
+        print(names_in_session)
+        if len(names_in_session) > len(qs):
+            new_names = list(filter(lambda x: x not in qs, names_in_session))
+            for name in new_names:
+                del self.request.session['psychics'][name]
+        elif len(names_in_session) < len(qs):
+            new_names = list(filter(lambda x: x not in names_in_session, qs))
+            for name in new_names:
+                self.request.session['psychics'][name] = {}
+                self.request.session['psychics'][str(name)]['rating'] = 0
+                self.request.session['psychics'][str(name)]['numbers'] = []
+    
+    
+    def get_queryset(self):
+        session_key = self.request.session.session_key
+        keys = list(map(str, Session.objects.only('session_key')))
+        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
+        self.create_objects()
+        self.upd_psychic()
+        return qs
+    
+    
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['psych'] = self.request.session['psychics']
+        return data
+
+    
+    def post(self, request):
+        for key in self.request.session['psychics']:
+            temp_numbers = self.request.session['psychics'][key]['numbers']
+            temp_numbers.append(randint(10,99))
+            self.request.session['psychics'][key]['numbers'] = temp_numbers
+            print(type(self.request.session['psychics'][key]['numbers']))
+        self.request.session.save()
+        return redirect('sendnum')
+
+
+
+class SendingNumber(ListView):
+    
+    template_name = 'psychics/number_submission_page.html'
+
+    def get_queryset(self):
+        session_key = self.request.session.session_key
+        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
+        return qs
+    
+    def get_context_data(self, **kwargs):
+        form = SendingNumberForm(self.request.POST)
+        data = super().get_context_data(**kwargs)
+        data['form'] = form
+        data['psych'] = self.request.session['psychics']
+        return data
+    
+    def post(self, request):
+        self.form = SendingNumberForm(self.request.POST)
+        psychics = self.request.session['psychics']
+        num = 0
+        if self.form.is_valid():
+            num = int(self.form.cleaned_data.get('number'))
+        
+        for name, value in psychics.items():
+            if value['numbers'][-1] == num:
+                psychics[name]['right_answers'].append(num)
             else:
-                state = 0
+                psychics[name]['wrong_answers'].append(num)
         
-        
-    content = {
-        # 'guessed':utilits.psychics_proc.get('guessed'),
-        'sendstate':state,
-        # 'ratings': psychics_proc.get('rating'),
-        'historynum':request.session.get('historynum'),
-        'psychics':request.session.get('psychics'),
-        'form':form,
-    }
-        
-    
-    return render(request, 'psychics/index.html', content)
+        return redirect('home')
 
 
 
@@ -106,37 +117,5 @@ def index(request):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
 
 

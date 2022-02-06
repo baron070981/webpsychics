@@ -1,0 +1,27 @@
+{% extends 'psychics/template.html' %}
+
+
+{% block dinamic %}
+
+<div>
+
+    <form action="" method="post" name='button_sendnum'>
+        {% csrf_token %}
+        <div>
+            {{ form }}
+        </div>
+        <div>
+            <button type="submit">Ok</button>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+

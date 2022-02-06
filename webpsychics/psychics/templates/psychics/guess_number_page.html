@@ -1,0 +1,25 @@
+{% extends 'psychics/template.html' %}
+
+
+{% block dinamic %}
+
+<div class='dinamic-block-guess'>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class='message-hidden-num'>
+            <span> Загадайте двузначное число </span>
+        </div>
+        <div class='btn-confirm'>
+            <button type="submit" name="button-confirm" value='1' class='btn'>
+                Загадал
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+
+
+
+ 

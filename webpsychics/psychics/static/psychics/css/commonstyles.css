@@ -1,0 +1,108 @@
+ 
+body{
+    background-color: #87B8BA;
+}
+
+.navigation{
+    display: flex;
+    width: 100%;
+}
+
+.name-site{
+    width: 100%;
+    color: #FAC81C;
+    font-weight: 700;
+    font-stretch: extra-expanded;
+    font-style: oblique;
+    font-size: x-large;
+    text-align: center;
+    
+    
+}
+
+.nfo-about-psychics{
+    width: 100%;
+    height: 50%;
+    background-color: #FAC81C;
+}
+
+.info-table{
+    table-layout: fixed;
+    width: 100%;
+    height: 70%;
+    border-collapse: collapse;
+    border: 3px solid white;
+}
+
+
+.table-info-head{
+    color: #8CF78C;
+    text-align: center;
+    border: 3px solid white;
+}
+
+td{
+    text-align:center;
+    border: 3px solid white;
+}
+
+.nums{
+    text-align:left;
+    color: #FFFFFF;
+}
+
+.names{
+    text-align:left;
+}
+
+.th_name{
+    width: 20%;
+}
+
+.th_rating{
+    width: 10%;
+}
+
+td{
+    padding:10px;
+    font-size:large;
+}
+
+.message-hidden-num{
+    color:#ED321C;
+    width: 100%;
+    text-align: center;
+    font-size: x-large;
+    margin: 30px;
+}
+
+.btn-confirm{
+    text-align: center;
+}
+
+.btn{
+    width:30%;
+    height: 10%;
+}
+
+.r-answer{
+    color: #D00928;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

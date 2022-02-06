@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang=ru>
+    <head>
+        <meta charset="utf-8">
+        <title>Psychics</title>
+        <link rel='stylesheet' href='{% static "psychics/css/commonstyles.css" %}'>
+    <body>
+        
+        <nav class='navigation'>
+            <div class='name-site'>
+                <span class='name-site'>ЭКСТРАСЕНСЫ</span>
+            </div>
+        </nav>
+        
+        <div class='info-about-psychics'>
+            {% block info_about_psych %}
+                <table class='info-table'>
+                    <thead class='table-info-head'>
+                        <th class='th_name'>экстрасенс</th>
+                        <th class='th_rating'>рэйтинг</th>
+                        <th class='th_num'>отгаданные числа</th>
+                    </thead>
+                    {% for ps, val in psych.items %}
+                        <tr>
+                            <td class='names'>{{ps}}</td>
+                            <td>
+                                {{ps}} {{val.rating}}
+                            </td>
+                            <td class='nums'>
+                                {% for num in val.numbers %}
+                                    {% if num in val.right_answers %}
+                                        <span class='r-answer'> {{num|wordwrap:4}} </span>
+                                    {% else %}
+                                        <span class='w-answer'> {{num|wordwrap:4}} </span>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endblock %}
+        </div>
+        
+        {% block dinamic %}
+        {% endblock %}
+    </body>
+</html>   

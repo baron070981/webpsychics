@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import PsychicsModel
 
-# Register your models here.
+
+admin.site.register(PsychicsModel)
