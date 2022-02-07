@@ -10,16 +10,14 @@ from random import randint
 
 from .models import *
 from .forms import *
-
+from .psychicsprocessing import PsychicDataHandler
 
 
 
 
 
 class PsychicsListView(ListView):
-    # request = HttpRequest()
-    # key = request.session.session_key
-    # model = PsychicsModel
+    
     template_name = 'psychics/guess_number_page.html'
     
     
@@ -74,10 +72,17 @@ class PsychicsListView(ListView):
             temp_numbers = self.request.session['psychics'][key]['numbers']
             temp_numbers.append(randint(10,99))
             self.request.session['psychics'][key]['numbers'] = temp_numbers
-            print(type(self.request.session['psychics'][key]['numbers']))
+            # self.clear_data()
         self.request.session.save()
         return redirect('sendnum')
-
+    
+    
+    def clear_data(self):
+        for name in self.request.session['psychics']:
+            self.request.session['psychics'][name]['numbers'] = []
+            self.request.session['psychics'][name]['right_answers']
+            self.request.session['psychics'][name]['wrong_answers']
+        self.request.session.save()
 
 
 class SendingNumber(ListView):
@@ -102,13 +107,8 @@ class SendingNumber(ListView):
         num = 0
         if self.form.is_valid():
             num = int(self.form.cleaned_data.get('number'))
-        
-        for name, value in psychics.items():
-            if value['numbers'][-1] == num:
-                psychics[name]['right_answers'].append(num)
-            else:
-                psychics[name]['wrong_answers'].append(num)
-        
+            PsychicDataHandler.check_answer(self.request, num)
+            PsychicDataHandler.calculate_psychic_credibility(self.request)
         return redirect('home')
 
 
