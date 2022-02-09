@@ -13,8 +13,8 @@ class PsychicDataHandler:
         '''
         расчет достоверности отгадок.
         '''
+        numbers = len(request.session['usernumbers'])
         for name, vals in request.session['psychics'].items():
-            numbers = len(vals['numbers'])
             r_answers = len(vals['right_answers'])
             rating = int(r_answers/numbers*100) if numbers > 0 else 0
             request.session['psychics'][name]['rating'] = rating
@@ -29,8 +29,9 @@ class PsychicDataHandler:
         for name, vals in request.session['psychics'].items():
             r_answers = vals['right_answers']
             w_answers = vals['wrong_answers']
-            numbers = vals['numbers']
-            if num == int(numbers[-1]):
+            numbers = vals['last_answer']
+            print(numbers)
+            if num == int(numbers):
                 r_answers.append(num)
                 request.session['psychics'][name]['right_answers'] = r_answers
             else:
@@ -44,9 +45,9 @@ class PsychicDataHandler:
         '''
         добавление числа введенного пользователем
         '''
-        numbers = request.session['psychics']['allnumbers']
+        numbers = request.session['usernumbers']
         numbers.append(number)
-        numbers = request.session['allnumbers'] = numbers
+        numbers = request.session['usernumbers'] = numbers
         request.session.save()
     
     
@@ -57,7 +58,9 @@ class PsychicDataHandler:
         '''
         for key in request.session['psychics']:
             temp_numbers = request.session['psychics'][key]['numbers']
-            temp_numbers.append(randint(10,99))
+            number = randint(start,end)
+            temp_numbers.append(number)
+            request.session['psychics'][key]['last_answer'] = number
             request.session['psychics'][key]['numbers'] = temp_numbers
         request.session.save()
 
