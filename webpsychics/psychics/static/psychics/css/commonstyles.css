@@ -1,6 +1,6 @@
  
 body{
-    background-color: #87B8BA;
+    background-color: #4E018A;
 }
 
 .navigation{
@@ -20,10 +20,9 @@ body{
     
 }
 
-.nfo-about-psychics{
+.info-about-psychics{
     width: 100%;
     height: 50%;
-    background-color: #FAC81C;
 }
 
 .info-table{
@@ -53,6 +52,7 @@ td{
 
 .names{
     text-align:left;
+    color: white;
 }
 
 .th_name{
@@ -69,7 +69,7 @@ td{
 }
 
 .message-hidden-num{
-    color:#ED321C;
+    color: #FAC81C;
     width: 100%;
     text-align: center;
     font-size: x-large;
@@ -93,16 +93,26 @@ td{
     width: 100%;
     margin-top: 2%;
     margin-left: 1%;
+    font-size: 1.2rem;
 }
 
 .all-num-label{
-    color: #eeee88;
+    color: #FAC81C;
+    font-size: 1.2rem;
 }
 
 
+.rating{
+    color: white;
+}
 
-
-
+.foot-info{
+    padding: 10px;
+    width: 100%;
+    color: #FAC81C;
+    text-align: left;
+    font-style: oblique;
+}
 
 
 
