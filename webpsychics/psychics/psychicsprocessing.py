@@ -1,5 +1,5 @@
 import copy
-
+from random import randint
 
 
 class PsychicDataHandler:
@@ -10,6 +10,9 @@ class PsychicDataHandler:
     
     @staticmethod
     def calculate_psychic_credibility(request):
+        '''
+        расчет достоверности отгадок.
+        '''
         for name, vals in request.session['psychics'].items():
             numbers = len(vals['numbers'])
             r_answers = len(vals['right_answers'])
@@ -20,6 +23,9 @@ class PsychicDataHandler:
     
     @staticmethod
     def check_answer(request, num):
+        '''
+        проверка верности ответа и добавление в соответствующий список
+        '''
         for name, vals in request.session['psychics'].items():
             r_answers = vals['right_answers']
             w_answers = vals['wrong_answers']
@@ -33,7 +39,27 @@ class PsychicDataHandler:
         request.session.save()
 
 
-
+    @staticmethod
+    def add_number(request, number):
+        '''
+        добавление числа введенного пользователем
+        '''
+        numbers = request.session['psychics']['allnumbers']
+        numbers.append(number)
+        numbers = request.session['allnumbers'] = numbers
+        request.session.save()
+    
+    
+    @staticmethod
+    def answer(request, start=10, end=99):
+        '''
+        генерация случайного числа в качестве ответа
+        '''
+        for key in request.session['psychics']:
+            temp_numbers = request.session['psychics'][key]['numbers']
+            temp_numbers.append(randint(10,99))
+            request.session['psychics'][key]['numbers'] = temp_numbers
+        request.session.save()
 
 
 
