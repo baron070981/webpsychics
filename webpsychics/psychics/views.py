@@ -48,12 +48,13 @@ class PsychicsListView(ListView):
             new_names = list(filter(lambda x: x not in names_in_session, qs))
             for name in new_names:
                 self.request.session['psychics'][name] = {}
-                self.request.session['psychics'][str(name)]['rating'] = 0
-                self.request.session['psychics'][str(name)]['numbers'] = []
+                self.request.session['psychics'][name]['rating'] = 0
+                self.request.session['psychics'][name]['numbers'] = []
     
     
     def get_queryset(self):
         session_key = self.request.session.session_key
+        self.request.session.set_expiry(60)
         keys = list(map(str, Session.objects.only('session_key')))
         qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
         self.create_objects()
@@ -68,21 +69,9 @@ class PsychicsListView(ListView):
 
     
     def post(self, request):
-        for key in self.request.session['psychics']:
-            temp_numbers = self.request.session['psychics'][key]['numbers']
-            temp_numbers.append(randint(10,99))
-            self.request.session['psychics'][key]['numbers'] = temp_numbers
-            # self.clear_data()
-        self.request.session.save()
+        PsychicDataHandler.answer(self.request)
         return redirect('sendnum')
     
-    
-    def clear_data(self):
-        for name in self.request.session['psychics']:
-            self.request.session['psychics'][name]['numbers'] = []
-            self.request.session['psychics'][name]['right_answers']
-            self.request.session['psychics'][name]['wrong_answers']
-        self.request.session.save()
 
 
 class SendingNumber(ListView):
@@ -103,7 +92,6 @@ class SendingNumber(ListView):
     
     def post(self, request):
         self.form = SendingNumberForm(self.request.POST)
-        psychics = self.request.session['psychics']
         num = 0
         if self.form.is_valid():
             num = int(self.form.cleaned_data.get('number'))
