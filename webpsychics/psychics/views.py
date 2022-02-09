@@ -22,19 +22,29 @@ class PsychicsListView(ListView):
     
     
     def create_objects(self):
+        '''
+        создание полей в сессии
+        '''
+        if 'usernumbers' not in self.request.session:
+            self.request.session['usernumbers'] = []
         qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
         if 'psychics' not in self.request.session:
             psychics = {}
             for name in qs:
-                psychics[str(name)] = {}
-                psychics[str(name)]['rating'] = 0
-                psychics[str(name)]['numbers'] = []
-                psychics[str(name)]['right_answers'] = []
-                psychics[str(name)]['wrong_answers'] = []
+                psychics[name] = {}
+                psychics[name]['rating'] = 0
+                psychics[name]['numbers'] = []
+                psychics[name]['last_answer'] = 0
+                psychics[name]['right_answers'] = []
+                psychics[name]['wrong_answers'] = []
             self.request.session['psychics'] = psychics
+        self.request.session.save()
     
     
     def upd_psychic(self):
+        '''
+        обновление сессии при добавлении или удалении экстрасенса
+        '''
         qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
         if 'psychics' not in self.request.session:
             return
@@ -50,12 +60,14 @@ class PsychicsListView(ListView):
                 self.request.session['psychics'][name] = {}
                 self.request.session['psychics'][name]['rating'] = 0
                 self.request.session['psychics'][name]['numbers'] = []
+                self.request.session['psychics'][name]['last_answer'] = 0
+                self.request.session['psychics'][name]['right_answers'] = []
+                self.request.session['psychics'][name]['wrong_answers'] = []
     
     
     def get_queryset(self):
         session_key = self.request.session.session_key
         self.request.session.set_expiry(60)
-        keys = list(map(str, Session.objects.only('session_key')))
         qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
         self.create_objects()
         self.upd_psychic()
@@ -64,6 +76,7 @@ class PsychicsListView(ListView):
     
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['usernums'] = self.request.session['usernumbers']
         data['psych'] = self.request.session['psychics']
         return data
 
@@ -83,20 +96,25 @@ class SendingNumber(ListView):
         qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
         return qs
     
+    
     def get_context_data(self, **kwargs):
         form = SendingNumberForm(self.request.POST)
         data = super().get_context_data(**kwargs)
         data['form'] = form
         data['psych'] = self.request.session['psychics']
+        data['usernums'] = self.request.session['usernumbers']
         return data
+    
     
     def post(self, request):
         self.form = SendingNumberForm(self.request.POST)
+        psychics = self.request.session['psychics']
         num = 0
         if self.form.is_valid():
             num = int(self.form.cleaned_data.get('number'))
             PsychicDataHandler.check_answer(self.request, num)
             PsychicDataHandler.calculate_psychic_credibility(self.request)
+            PsychicDataHandler.add_number(self.request, num)
         return redirect('home')
 
 
