@@ -89,9 +89,15 @@ td{
     color: #D00928;
 }
 
+.all-send-num{
+    width: 100%;
+    margin-top: 2%;
+    margin-left: 1%;
+}
 
-
-
+.all-num-label{
+    color: #eeee88;
+}
 
 
 
