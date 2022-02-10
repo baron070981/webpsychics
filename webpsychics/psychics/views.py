@@ -11,6 +11,7 @@ from random import randint
 from .models import *
 from .forms import *
 from .psychicsprocessing import PsychicDataHandler
+from .psychicsprocessing import SessionHandler
 
 
 
@@ -21,56 +22,13 @@ class PsychicsListView(ListView):
     template_name = 'psychics/guess_number_page.html'
     
     
-    def create_objects(self):
-        '''
-        создание полей в сессии
-        '''
-        if 'usernumbers' not in self.request.session:
-            self.request.session['usernumbers'] = []
-        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
-        if 'psychics' not in self.request.session:
-            psychics = {}
-            for name in qs:
-                psychics[name] = {}
-                psychics[name]['rating'] = 0
-                psychics[name]['numbers'] = []
-                psychics[name]['last_answer'] = 0
-                psychics[name]['right_answers'] = []
-                psychics[name]['wrong_answers'] = []
-            self.request.session['psychics'] = psychics
-        self.request.session.save()
-    
-    
-    def upd_psychic(self):
-        '''
-        обновление сессии при добавлении или удалении экстрасенса
-        '''
-        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
-        if 'psychics' not in self.request.session:
-            return
-        names_in_session = self.request.session['psychics'].keys()
-        print(names_in_session)
-        if len(names_in_session) > len(qs):
-            new_names = list(filter(lambda x: x not in qs, names_in_session))
-            for name in new_names:
-                del self.request.session['psychics'][name]
-        elif len(names_in_session) < len(qs):
-            new_names = list(filter(lambda x: x not in names_in_session, qs))
-            for name in new_names:
-                self.request.session['psychics'][name] = {}
-                self.request.session['psychics'][name]['rating'] = 0
-                self.request.session['psychics'][name]['numbers'] = []
-                self.request.session['psychics'][name]['last_answer'] = 0
-                self.request.session['psychics'][name]['right_answers'] = []
-                self.request.session['psychics'][name]['wrong_answers'] = []
-    
     
     def get_queryset(self):
         session_key = self.request.session.session_key
         self.request.session.set_expiry(60)
         qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
-        self.create_objects()
-        self.upd_psychic()
+        SessionHandler.create_fields_session(self.request)
+        SessionHandler.update_session(self.request)
         return qs
     
     
@@ -113,8 +71,8 @@ class SendingNumber(ListView):
         if self.form.is_valid():
             num = int(self.form.cleaned_data.get('number'))
             PsychicDataHandler.check_answer(self.request, num)
-            PsychicDataHandler.calculate_psychic_credibility(self.request)
             PsychicDataHandler.add_number(self.request, num)
+            PsychicDataHandler.calculate_psychic_credibility(self.request)
         return redirect('home')
 
 
