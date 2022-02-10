@@ -73,7 +73,7 @@ td{
     width: 100%;
     text-align: center;
     font-size: x-large;
-    margin: 30px;
+    margin: 1%;
 }
 
 .btn-confirm{
@@ -94,6 +94,7 @@ td{
     margin-top: 2%;
     margin-left: 1%;
     font-size: 1.2rem;
+    color: white;
 }
 
 .all-num-label{
@@ -114,6 +115,19 @@ td{
     font-style: oblique;
 }
 
+.num-submit-form-container{
+    text-align: center;
+    margin: 1%;
+    color: white;
+}
+
+.btn-number-submit{
+    margin: 10px;
+}
+
+.label-form{
+    margin: 5px;
+}
 
 
 

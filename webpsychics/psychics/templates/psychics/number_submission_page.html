@@ -3,14 +3,15 @@
 
 {% block dinamic %}
 
-<div>
+<div class='num-submit-form-container'>
 
-    <form action="" method="post" name='button_sendnum'>
+    <form action="" method="post" name='number-submission'>
         {% csrf_token %}
+        <div class='label-form'>Введите загаданное число:</div>
         <div>
-            {{ form }}
+            {{ form.number }}
         </div>
-        <div>
+        <div class='btn-number-submit'>
             <button type="submit">Ok</button>
         </div>
     </form>
