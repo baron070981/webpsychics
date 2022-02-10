@@ -1,6 +1,8 @@
 import copy
 from random import randint
 
+from .models import *
+
 
 class PsychicDataHandler:
     
@@ -66,7 +68,49 @@ class PsychicDataHandler:
 
 
 
-
+class SessionHandler:
+    def __init__(self):
+        pass
+    
+    
+    @staticmethod
+    def create_fields_session(request):
+        if 'usernumbers' not in request.session:
+            request.session['usernumbers'] = []
+        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
+        if 'psychics' not in request.session:
+            psychics = {}
+            for name in qs:
+                psychics[name] = {}
+                psychics[name]['rating'] = 0
+                psychics[name]['numbers'] = []
+                psychics[name]['last_answer'] = 0
+                psychics[name]['right_answers'] = []
+                psychics[name]['wrong_answers'] = []
+            request.session['psychics'] = psychics
+        request.session.save()
+    
+    
+    @staticmethod
+    def update_session(request):
+        
+        qs = list(map(lambda x: x.name, PsychicsModel.objects.all()))
+        if 'psychics' not in request.session:
+            return
+        names_in_session = request.session['psychics'].keys()
+        if len(names_in_session) > len(qs):
+            new_names = list(filter(lambda x: x not in qs, names_in_session))
+            for name in new_names:
+                del request.session['psychics'][name]
+        elif len(names_in_session) < len(qs):
+            new_names = list(filter(lambda x: x not in names_in_session, qs))
+            for name in new_names:
+                request.session['psychics'][name] = {}
+                request.session['psychics'][name]['rating'] = 0
+                request.session['psychics'][name]['numbers'] = []
+                request.session['psychics'][name]['last_answer'] = 0
+                request.session['psychics'][name]['right_answers'] = []
+                request.session['psychics'][name]['wrong_answers'] = []
 
 
 
