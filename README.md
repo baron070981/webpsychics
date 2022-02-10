@@ -1,3 +1,3 @@
 # webpsychics
 
-![alt](/home/baron/Изображения/start_page.png)
+![](file:/home/baron/Изображения/start_page.png)
