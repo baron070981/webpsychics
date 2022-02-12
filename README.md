@@ -1,5 +1,6 @@
 # webpsychics
 
+### Симуляция отгадывания загаданных чисел экстрасенсами
 
 (![start_page](https://user-images.githubusercontent.com/42312687/153505496-88249acf-2ff6-4f27-a64f-7f00f18fec5c.png)
 
