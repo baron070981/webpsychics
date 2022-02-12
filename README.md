@@ -1,8 +1,10 @@
 # webpsychics
+___
+>### Симуляция отгадывания экстрасенсами загаданных чисел
+___
 
-### Симуляция отгадывания загаданных чисел экстрасенсами
 
-(![start_page](https://user-images.githubusercontent.com/42312687/153505496-88249acf-2ff6-4f27-a64f-7f00f18fec5c.png)
+![start_page](https://user-images.githubusercontent.com/42312687/153505496-88249acf-2ff6-4f27-a64f-7f00f18fec5c.png)
 
 ![form1](https://user-images.githubusercontent.com/42312687/153505607-3cf6e1bb-9dcc-4810-b320-1f8df35c3855.png)
 
